@@ -1,0 +1,342 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "59e531c1-70d4-4cb2-af9e-4bee1c7e691e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pip install streamlit"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "ada89914-f779-4645-adad-929038ad851a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import streamlit as st\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "import joblib"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "8bc5f8a6-03a7-40bf-9617-650a442413c0",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Load data and model\n",
+    "data = pd.read_csv(r\"D:\\TANZANIA_KIC\\capstone-project-nnko294\\data\\tanzania_climate_data.csv\")\n",
+    "data.columns = data.columns.str.strip().str.lower()\n",
+    "data.rename(columns={\n",
+    "    'average_temperature_c': 'temperature',\n",
+    "    'total_rainfall_mm': 'precipitation',\n",
+    "}, inplace=True)\n",
+    "model = joblib.load('random_forest_model.pkl')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "c5c4f62f-98dd-4ce5-b8bf-99665ff6ab5a",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2025-05-14 16:53:48.075 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:48.075 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "DeltaGenerator()"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# App Title\n",
+    "st.title(\"Tanzania Climate Forecast Dashboard\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "9250909d-df82-4699-b89c-fcff28ea05f6",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2025-05-14 16:53:50.418 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:50.419 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "DeltaGenerator()"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Section: Data Overview\n",
+    "st.subheader(\"Historical Climate Trends\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "0a1e939a-2248-4b85-b33f-13af1310a5ae",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2025-05-14 16:53:51.365 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:51.476 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:51.476 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "DeltaGenerator()"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Average temperature by year\n",
+    "avg_temp = data.groupby('year')['temperature'].mean()\n",
+    "fig_temp, ax1 = plt.subplots()\n",
+    "avg_temp.plot(ax=ax1, label='Avg Temperature (°C)', color='orange')\n",
+    "ax1.set_xlabel('Year')\n",
+    "ax1.set_ylabel('Temperature (°C)')\n",
+    "ax1.set_title('Average Temperature Over Years')\n",
+    "ax1.legend()\n",
+    "st.pyplot(fig_temp)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "89ec268a-1e40-4845-9da3-62d3df5d2209",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2025-05-14 16:53:53.803 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:53.907 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:53.907 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "DeltaGenerator()"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Average rainfall by year\n",
+    "avg_rain = data.groupby('year')['precipitation'].mean()\n",
+    "fig_rain, ax2 = plt.subplots()\n",
+    "avg_rain.plot(ax=ax2, label='Avg Rainfall (mm)', color='blue')\n",
+    "ax2.set_xlabel('Year')\n",
+    "ax2.set_ylabel('Precipitation (mm)')\n",
+    "ax2.set_title('Average Precipitation Over Years')\n",
+    "ax2.legend()\n",
+    "st.pyplot(fig_rain)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "71a9cb99-87b8-4d3b-9ca7-eaf4dfff8694",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2025-05-14 16:53:54.722 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:54.723 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "DeltaGenerator()"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Section: Prediction\n",
+    "st.subheader(\"Predict Future Temperature\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "5af99bc2-4dfa-4db3-84b6-d4382f8a84e2",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2025-05-14 16:53:57.298 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.299 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.300 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.300 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.301 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.301 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.302 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.302 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.303 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.303 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.304 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.304 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.305 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.305 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.305 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.306 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.306 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.307 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.307 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.308 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.308 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:53:57.308 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Input fields\n",
+    "precip = st.slider(\"Total Rainfall (mm)\", 0, 500, 100)\n",
+    "year = st.slider(\"Year\", min_value=2023, max_value=2100, value=2030)\n",
+    "month = st.selectbox(\"Month\", list(range(1, 13)))\n",
+    "season = st.selectbox(\"Season\", ['Dry', 'Cool', 'Hot', 'Wet'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "1b45a06d-2478-4384-b0f9-4fa5040bf602",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Encode season (matching model input encoding)\n",
+    "season_encoded = [0, 0, 0]  # Order: Season_Cool, Season_Hot, Season_Wet\n",
+    "if season == 'Cool':\n",
+    "    season_encoded[0] = 1\n",
+    "elif season == 'Hot':\n",
+    "    season_encoded[1] = 1\n",
+    "elif season == 'Wet':\n",
+    "    season_encoded[2] = 1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "20a1d58c-ae07-4d66-8409-d2a8a0bd2c6e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Input dataframe for prediction\n",
+    "input_df = pd.DataFrame([[year, month, precip] + season_encoded],\n",
+    "    columns=['year', 'month', 'precipitation', 'season_cool', 'season_hot', 'season_wet'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "43cfbf93-e6b5-436c-9494-62d08c5ed6fa",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2025-05-14 16:54:04.014 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+      "2025-05-14 16:54:04.015 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "DeltaGenerator()"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Prediction\n",
+    "prediction = model.predict(input_df)[0]\n",
+    "st.success(f\"Predicted Average Temperature: **{prediction:.2f} °C**\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c248a7af-c54b-4a7a-8c06-10e5bcbab11c",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
